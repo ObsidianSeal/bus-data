@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<title>bus data !!!</title>
+
+		<meta charset="UTF-8" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<style>
+			button {
+				width: 100px;
+				height: 100px;
+				margin-bottom: 10px;
+			}
+
+			table,
+			td {
+				border: 2px solid black;
+			}
+		</style>
+	</head>
+
+	<body>
+		<form name="data_form" id="data_form">
+			<textarea name="data_input" id="data_input" rows="10" cols="100"></textarea>
+			<br />
+			<button name="submit_button" id="submit_button">submit</button>
+		</form>
+
+		<div>waiting for data...</div>
+
+		<table>
+			<td>waiting for data...</td>
+		</table>
+
+		<script>
+			document.querySelector("form").addEventListener("submit", (e) => {
+				e.preventDefault();
+
+				const busData = JSON.parse(document.data_form.data_input.value);
+				console.log(busData);
+
+				document.querySelector("table").innerHTML = "";
+
+				var articulated = 0;
+				for (let i = 0; i < busData.entity.length; i++) {
+					let busId = busData.entity[i].id;
+					if (busId < 100) {
+						articulated++;
+
+						const row = document.createElement("tr");
+						row.innerHTML = `<td>${busId}</td><td>${busData.entity[i].vehicle.trip.route_id}</td><td>${busData.entity[i].vehicle.position.latitude} ${busData.entity[i].vehicle.position.longitude}</td>`;
+						document.querySelector("table").appendChild(row);
+					}
+				}
+
+				document.querySelector("div").innerHTML = `<h3>there are ${articulated} articulated buses currently in service</h3>`;
+			});
+		</script>
+	</body>
+</html>
