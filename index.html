@@ -24,14 +24,25 @@
 				border: 2px solid black;
 			}
 
+			td {
+				padding: 0 10px 0 10px;
+			}
+
 			p {
 				margin: 0;
+			}
+
+			#all_buses_table {
+				margin: 30px 0 60px 0;
 			}
 		</style>
 	</head>
 
 	<body>
-		<h2><a href="http://gtfs.ltconline.ca/Vehicle/VehiclePositions.json" target="_blank">link to bus data</a></h2>
+		<h2>
+			<a href="http://gtfs.ltconline.ca/Vehicle/VehiclePositions.json" target="_blank">link to bus data</a> /
+			<a href="https://realtime.londontransit.ca/#/app/nextdepartures" target="_blank">link to realtime tracking</a>
+		</h2>
 
 		<form name="data_form" id="data_form">
 			<textarea
@@ -47,7 +58,7 @@
 
 		<h3></h3>
 
-		<table>
+		<table id="articulated_buses_table">
 			<td>waiting for data...</td>
 		</table>
 
@@ -81,12 +92,6 @@
 			<p id="35">35&nbsp;&nbsp;&nbsp;</p>
 			<p id="36">36&nbsp;&nbsp;&nbsp;</p>
 			<p id="37">37&nbsp;&nbsp;&nbsp;</p>
-			<p id="51">51?&nbsp;&nbsp;</p>
-			<p id="52">52?&nbsp;&nbsp;</p>
-			<p id="53">53?&nbsp;&nbsp;</p>
-			<p id="54">54?&nbsp;&nbsp;</p>
-			<p id="55">55?&nbsp;&nbsp;</p>
-			<p id="56">56?&nbsp;&nbsp;</p>
 			<p id="90">90&nbsp;&nbsp;&nbsp;</p>
 			<p id="91">91&nbsp;&nbsp;&nbsp;</p>
 			<p id="92">92&nbsp;&nbsp;&nbsp;</p>
@@ -97,6 +102,10 @@
 			<p id="106">106*&nbsp;</p>
 		</div>
 
+		<table id="all_buses_table">
+			<td>waiting for data...</td>
+		</table>
+
 		<script>
 			document.querySelector("form").addEventListener("submit", (e) => {
 				e.preventDefault();
@@ -104,6 +113,15 @@
 				const busData = JSON.parse(document.data_form.data_input.value);
 
 				document.querySelector("table").innerHTML = "";
+				document.getElementById("all_buses_table").innerHTML = "";
+
+				const row1 = document.createElement("tr");
+				row1.innerHTML = `<td>bus ID</td><td>route #</td><td><a href="https://maps.google.com/" target="_blank">latitude/longitude</a></td><td>"bearing"</td><td>"direction"</td>`;
+				document.getElementById("articulated_buses_table").appendChild(row1);
+
+				const row2 = document.createElement("tr");
+				row2.innerHTML = `<td>bus ID</td><td>route #</td><td><a href="https://maps.google.com/" target="_blank">latitude/longitude</a></td><td>"bearing"</td><td>"direction"</td>`;
+				document.getElementById("all_buses_table").appendChild(row2);
 
 				var articulated = 0;
 				for (let i = 0; i < busData.entity.length; i++) {
@@ -112,13 +130,32 @@
 
 					document.getElementById(busRoute).innerHTML = document.getElementById(busRoute).innerHTML + "█";
 
+					let routeId = busData.entity[i].vehicle.trip.route_id;
+					let latitude = busData.entity[i].vehicle.position.latitude;
+					let longitude = busData.entity[i].vehicle.position.longitude;
+					let bearing = busData.entity[i].vehicle.position.bearing;
+					let direction = busData.entity[i].vehicle.trip.direction_id;
+
+					if (bearing == 0) bearing = "north";
+					if (bearing == 45) bearing = "north-east";
+					if (bearing == 90) bearing = "east";
+					if (bearing == 135) bearing = "south-east";
+					if (bearing == 180) bearing = "south";
+					if (bearing == 225) bearing = "south-west";
+					if (bearing == 270) bearing = "west";
+					if (bearing == 315) bearing = "north-west";
+
 					if (busId < 100) {
 						articulated++;
 
 						const row = document.createElement("tr");
-						row.innerHTML = `<td>${busId}</td><td>${busData.entity[i].vehicle.trip.route_id}</td><td>${busData.entity[i].vehicle.position.latitude} ${busData.entity[i].vehicle.position.longitude}</td>`;
-						document.querySelector("table").appendChild(row);
+						row.innerHTML = `<td>${busId}</td><td>${routeId}</td><td><a href="https://www.openstreetmap.org/search?query=${latitude}%20${longitude}" target="_blank">${latitude} ${longitude}</a></td><td>${bearing}</td><td>${direction}</td>`;
+						document.querySelector("#articulated_buses_table").appendChild(row);
 					}
+
+					const row = document.createElement("tr");
+					row.innerHTML = `<td>${busId}</td><td>${routeId}</td><td><a href="https://www.openstreetmap.org/search?query=${latitude}%20${longitude}" target="_blank">${latitude} ${longitude}</a></td><td>${bearing}</td><td>${direction}</td>`;
+					document.querySelector("#all_buses_table").appendChild(row);
 				}
 
 				document.querySelector("h3").innerHTML = `there are ${articulated} articulated buses currently in service (out of ${busData.entity.length} total buses)`;
