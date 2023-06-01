@@ -1,0 +1,122 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;500");
+@import url("https://fonts.googleapis.com/css2?family=Roboto");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab");
+
+:root {
+	--background: #f4f1de;
+	--foreground: #3d405b;
+	--accent1: #e07a5f;
+	--accent2: #f2cc8f;
+	--accent3: #81b29a;
+}
+
+::selection {
+	background-color: var(--foreground);
+	color: var(--background);
+}
+
+::-webkit-scrollbar {
+	display: none;
+}
+
+* {
+	margin: 0;
+	border: 0;
+	padding: 0;
+
+	font-family: "Oswald";
+	font-weight: 400;
+}
+
+body {
+	padding: 20px;
+
+	background-color: var(--background);
+	color: var(--foreground);
+}
+
+a {
+	display: block;
+	width: fit-content;
+	padding-right: 50px;
+
+	color: var(--foreground);
+	text-decoration: none;
+}
+
+a:hover,
+a:focus {
+	outline: none;
+	color: var(--accent1);
+}
+
+a i {
+	transition: translate 0.5s;
+}
+
+a:hover i,
+a:focus i {
+	translate: 10px;
+}
+
+h1 {
+	font-size: 128px;
+}
+
+h2 {
+	font-size: 64px;
+	font-weight: 500;
+}
+
+h3 {
+	font-size: 48px;
+}
+
+h4 {
+	font-size: 32px;
+}
+
+h5,
+a,
+p,
+b {
+	font-size: 24px;
+}
+
+h6,
+textarea,
+td {
+	font-size: 16px;
+}
+
+textarea {
+	margin: 20px 0 20px 0;
+	border: 3px solid var(--foreground);
+	padding: 5px;
+
+	font-family: "Roboto Mono";
+	background-color: var(--background);
+	caret-color: var(--foreground);
+	color: var(--foreground);
+
+	resize: none;
+	outline: none;
+}
+
+textarea::placeholder {
+	color: var(--accent3);
+}
+
+table {
+	margin: 20px 0 20px 0;
+	border: 3px solid var(--foreground);
+	border-collapse: collapse;
+}
+
+td {
+	border: 3px solid var(--foreground);
+	padding: 5px;
+
+	font-family: "Roboto Mono";
+}
