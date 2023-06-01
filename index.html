@@ -9,6 +9,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 		<style>
+			* {
+				font-family: "Roboto Mono";
+			}
+
 			button {
 				width: 100px;
 				height: 100px;
@@ -19,11 +23,15 @@
 			td {
 				border: 2px solid black;
 			}
+
+			p {
+				margin: 0;
+			}
 		</style>
 	</head>
 
 	<body>
-		<p><a href="http://gtfs.ltconline.ca/Vehicle/VehiclePositions.json" target="_blank">link to bus data</a></p>
+		<h2><a href="http://gtfs.ltconline.ca/Vehicle/VehiclePositions.json" target="_blank">link to bus data</a></h2>
 
 		<form name="data_form" id="data_form">
 			<textarea
@@ -37,24 +45,73 @@
 			<button name="submit_button" id="submit_button">submit</button>
 		</form>
 
-		<div>waiting for data...</div>
+		<h3></h3>
 
 		<table>
 			<td>waiting for data...</td>
 		</table>
+
+		<div>
+			<h4>bus distribution</h4>
+
+			<p id="01">1&nbsp;&nbsp;&nbsp;&nbsp;</p>
+			<p id="02">2&nbsp;&nbsp;&nbsp;&nbsp;</p>
+			<p id="03">3&nbsp;&nbsp;&nbsp;&nbsp;</p>
+			<p id="04">4&nbsp;&nbsp;&nbsp;&nbsp;</p>
+			<p id="05">5&nbsp;&nbsp;&nbsp;&nbsp;</p>
+			<p id="06">6&nbsp;&nbsp;&nbsp;&nbsp;</p>
+			<p id="07">7&nbsp;&nbsp;&nbsp;&nbsp;</p>
+			<p id="09">9&nbsp;&nbsp;&nbsp;&nbsp;</p>
+			<p id="10">10&nbsp;&nbsp;&nbsp;</p>
+			<p id="12">12&nbsp;&nbsp;&nbsp;</p>
+			<p id="13">13&nbsp;&nbsp;&nbsp;</p>
+			<p id="15">15&nbsp;&nbsp;&nbsp;</p>
+			<p id="16">16&nbsp;&nbsp;&nbsp;</p>
+			<p id="17">17&nbsp;&nbsp;&nbsp;</p>
+			<p id="19">19&nbsp;&nbsp;&nbsp;</p>
+			<p id="20">20&nbsp;&nbsp;&nbsp;</p>
+			<p id="24">24&nbsp;&nbsp;&nbsp;</p>
+			<p id="25">25&nbsp;&nbsp;&nbsp;</p>
+			<p id="27">27&nbsp;&nbsp;&nbsp;</p>
+			<p id="28">28&nbsp;&nbsp;&nbsp;</p>
+			<p id="30">30&nbsp;&nbsp;&nbsp;</p>
+			<p id="31">31&nbsp;&nbsp;&nbsp;</p>
+			<p id="33">33&nbsp;&nbsp;&nbsp;</p>
+			<p id="34">34&nbsp;&nbsp;&nbsp;</p>
+			<p id="35">35&nbsp;&nbsp;&nbsp;</p>
+			<p id="36">36&nbsp;&nbsp;&nbsp;</p>
+			<p id="37">37&nbsp;&nbsp;&nbsp;</p>
+			<p id="51">51?&nbsp;&nbsp;</p>
+			<p id="52">52?&nbsp;&nbsp;</p>
+			<p id="53">53?&nbsp;&nbsp;</p>
+			<p id="54">54?&nbsp;&nbsp;</p>
+			<p id="55">55?&nbsp;&nbsp;</p>
+			<p id="56">56?&nbsp;&nbsp;</p>
+			<p id="90">90&nbsp;&nbsp;&nbsp;</p>
+			<p id="91">91&nbsp;&nbsp;&nbsp;</p>
+			<p id="92">92&nbsp;&nbsp;&nbsp;</p>
+			<p id="93">93&nbsp;&nbsp;&nbsp;</p>
+			<p id="94">94&nbsp;&nbsp;&nbsp;</p>
+			<p id="102">102*&nbsp;</p>
+			<p id="104">104*&nbsp;</p>
+			<p id="106">106*&nbsp;</p>
+		</div>
 
 		<script>
 			document.querySelector("form").addEventListener("submit", (e) => {
 				e.preventDefault();
 
 				const busData = JSON.parse(document.data_form.data_input.value);
-				console.log(busData);
 
 				document.querySelector("table").innerHTML = "";
 
 				var articulated = 0;
 				for (let i = 0; i < busData.entity.length; i++) {
 					let busId = busData.entity[i].id;
+					let busRoute = busData.entity[i].vehicle.trip.route_id;
+
+					document.getElementById(busRoute).innerHTML = document.getElementById(busRoute).innerHTML + "█";
+
 					if (busId < 100) {
 						articulated++;
 
@@ -64,9 +121,7 @@
 					}
 				}
 
-				document.querySelector(
-					"div"
-				).innerHTML = `<h3>there are ${articulated} articulated buses currently in service (out of ${busData.entity.length} total buses)</h3>`;
+				document.querySelector("h3").innerHTML = `there are ${articulated} articulated buses currently in service (out of ${busData.entity.length} total buses)`;
 			});
 		</script>
 	</body>
