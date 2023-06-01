@@ -23,8 +23,16 @@
 	</head>
 
 	<body>
+		<p><a href="http://gtfs.ltconline.ca/Vehicle/VehiclePositions.json" target="_blank">link to bus data</a></p>
+
 		<form name="data_form" id="data_form">
-			<textarea name="data_input" id="data_input" rows="10" cols="100"></textarea>
+			<textarea
+				name="data_input"
+				id="data_input"
+				rows="10"
+				cols="100"
+				placeholder="crtl+a & ctrl+c http://gtfs.ltconline.ca/Vehicle/VehiclePositions.json, then paste here"
+			></textarea>
 			<br />
 			<button name="submit_button" id="submit_button">submit</button>
 		</form>
@@ -56,7 +64,9 @@
 					}
 				}
 
-				document.querySelector("div").innerHTML = `<h3>there are ${articulated} articulated buses currently in service</h3>`;
+				document.querySelector(
+					"div"
+				).innerHTML = `<h3>there are ${articulated} articulated buses currently in service (out of ${busData.entity.length} total buses)</h3>`;
 			});
 		</script>
 	</body>
