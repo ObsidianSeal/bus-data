@@ -32,6 +32,10 @@
 	background-color: var(--accent2);
 }
 
+::-webkit-scrollbar-corner {
+	background-color: var(--background);
+}
+
 * {
 	margin: 0;
 	border: 0;

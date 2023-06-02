@@ -54,6 +54,7 @@ document.querySelector("textarea").addEventListener("input", (e) => {
 		let longitude = busData.entity[i].vehicle.position.longitude;
 		let bearing = busData.entity[i].vehicle.position.bearing;
 		let direction = busData.entity[i].vehicle.trip.direction_id;
+		let occupancy = busData.entity[i].vehicle.occupancy_percentage;
 
 		if (bearing == 0) bearing = "north";
 		if (bearing == 45) bearing = "north-east";
@@ -66,29 +67,33 @@ document.querySelector("textarea").addEventListener("input", (e) => {
 
 		if (busId < 100) {
 			articulated++;
-			addRow(busId, routeId, latitude, longitude, bearing, direction, "#articulated_buses_table");
+			addRow(busId, routeId, latitude, longitude, bearing, direction, occupancy, "#articulated_buses_table");
 		}
 
 		busDistribution[parseInt(routeId)]++;
-		addRow(busId, routeId, latitude, longitude, bearing, direction, "#all_buses_table");
+		addRow(busId, routeId, latitude, longitude, bearing, direction, occupancy, "#all_buses_table");
 	}
 
 	for (const route in busDistribution) {
+		let busString = "";
+		for (let i = 0; i < busDistribution[route]; i++) busString = busString + "🚌";
+
 		const row = document.createElement("tr");
-		row.innerHTML = `<td>${route}</td><td>${busDistribution[route]}</td>`;
+		if (route > 100) row.innerHTML = `<td>${route}*</td><td>${busDistribution[route]}</td><td>${busString}</td>`;
+		else row.innerHTML = `<td>${route}</td><td>${busDistribution[route]}</td><td>${busString}</td>`;
 		document.querySelector("#bus_distribution_table").appendChild(row);
 	}
 
 	document.querySelector("#total_bus_count").innerHTML = totalBuses;
 	document.querySelector("#articulated_count").innerHTML = articulated;
-	document.querySelector("#articulated_percent").innerHTML = Math.round((articulated / totalBuses) * 100) / 100;
+	document.querySelector("#articulated_percent").innerHTML = Math.round((articulated / totalBuses) * 10000) / 100;
 
 	document.querySelector("div").style = "display: block";
 });
 
-function addRow(busId, routeId, latitude, longitude, bearing, direction, table) {
+function addRow(busId, routeId, latitude, longitude, bearing, direction, occupancy, table) {
 	const row = document.createElement("tr");
-	row.innerHTML = `<td>${busId}</td><td>${routeId}</td><td><a href="https://www.openstreetmap.org/search?query=${latitude}%20${longitude}" target="_blank">${latitude} ${longitude} <i class="fa-solid fa-arrow-right-long"></i></a></td><td>${bearing}</td><td>${direction}</td>`;
+	row.innerHTML = `<td>${busId}</td><td>${routeId}</td><td><a href="https://www.openstreetmap.org/search?query=${latitude}%20${longitude}" target="_blank">${latitude} ${longitude} <i class="fa-solid fa-arrow-right-long"></i></a></td><td>${bearing}</td><td>${direction}</td><td>${occupancy}%</td>`;
 	document.querySelector(table).appendChild(row);
 }
 
