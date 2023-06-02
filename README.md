@@ -1,2 +1,3 @@
 # bus-data
-Finds articulated buses, visualises data, and more!
+
+Finds articulated buses, visualizes data, and more!
