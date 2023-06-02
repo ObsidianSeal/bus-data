@@ -91,3 +91,21 @@ function addRow(busId, routeId, latitude, longitude, bearing, direction, table) 
 	row.innerHTML = `<td>${busId}</td><td>${routeId}</td><td><a href="https://www.openstreetmap.org/search?query=${latitude}%20${longitude}" target="_blank">${latitude} ${longitude} <i class="fa-solid fa-arrow-right-long"></i></a></td><td>${bearing}</td><td>${direction}</td>`;
 	document.querySelector(table).appendChild(row);
 }
+
+document.querySelector("a").addEventListener("click", (e) => {
+	setTimeout(() => {
+		window.location.reload();
+	}, 100);
+});
+
+document.querySelector("#to_top_button").addEventListener("click", (e) => {
+	window.scroll(0, 0);
+});
+
+document.addEventListener("scroll", (e) => {
+	if (window.scrollY > 300) document.querySelector("#to_top_button").style = "display: flex";
+	else document.querySelector("#to_top_button").style = "display: none";
+});
+
+// note to self: provide option to sort by different things
+// also graph the bus distribution
