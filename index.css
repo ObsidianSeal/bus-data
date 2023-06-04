@@ -157,7 +157,7 @@ td {
 	font-family: "Roboto Mono";
 }
 
-span {
+span:not(#articulated_plural) {
 	font-weight: 500;
 }
 
