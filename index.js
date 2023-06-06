@@ -86,8 +86,12 @@ document.querySelector("textarea").addEventListener("input", (e) => {
 
 	document.querySelector("#total_bus_count").innerHTML = totalBuses;
 	document.querySelector("#articulated_count").innerHTML = articulated;
-	if (articulated == 1) document.querySelector("#articulated_plural").innerHTML = "is";
 	document.querySelector("#articulated_percent").innerHTML = Math.round((articulated / totalBuses) * 10000) / 100;
+
+	if (articulated == 1) {
+		document.querySelector("#articulated_plural").innerHTML = "is";
+		document.querySelector("#info_plural").innerHTML = "that bus:";
+	}
 
 	document.querySelector("div").style = "display: block";
 });
