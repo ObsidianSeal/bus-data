@@ -37,6 +37,7 @@ document.querySelector("textarea").addEventListener("input", (e) => {
 		35: 0,
 		36: 0,
 		37: 0,
+		38: 0,
 		90: 0,
 		91: 0,
 		92: 0,
