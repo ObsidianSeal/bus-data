@@ -161,6 +161,39 @@ span:not(#articulated_plural, #info_plural) {
 	font-weight: 500;
 }
 
+.bad,
+.ok,
+.good {
+	font-family: "Roboto Mono";
+}
+
+.bad {
+	color: var(--accent1);
+}
+
+.ok {
+	color: var(--accent2);
+}
+
+.good {
+	color: var(--accent3);
+}
+
+.bad::selection {
+	background-color: var(--accent1);
+	color: var(--background);
+}
+
+.ok::selection {
+	background-color: var(--accent2);
+	color: var(--background);
+}
+
+.good::selection {
+	background-color: var(--accent3);
+	color: var(--background);
+}
+
 #to_top_button {
 	width: 50px;
 	height: 50px;

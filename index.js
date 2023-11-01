@@ -48,31 +48,48 @@ document.querySelector("textarea").addEventListener("input", (e) => {
 		106: 0,
 	};
 
+	// MODEL ARRAYS
+	let old40 = [];
+	let old60 = [];
+	let new40 = [];
+	let new60 = [];
+
 	for (let i = 0; i < totalBuses; i++) {
-		let busId = busData.entity[i].id;
+		let busId = parseInt(busData.entity[i].id);
 		let routeId = busData.entity[i].vehicle.trip.route_id;
 		let latitude = busData.entity[i].vehicle.position.latitude;
 		let longitude = busData.entity[i].vehicle.position.longitude;
 		let bearing = busData.entity[i].vehicle.position.bearing;
-		let direction = busData.entity[i].vehicle.trip.direction_id;
-		let occupancy = busData.entity[i].vehicle.occupancy_percentage;
+		let direction = busData.entity[i].vehicle.trip.direction_id; // hard to determine what this actually means
+		let occupancy = parseInt(busData.entity[i].vehicle.occupancy_percentage);
 
 		if (bearing == 0) bearing = "north";
-		if (bearing == 45) bearing = "north-east";
+		if (bearing == 45) bearing = "northeast";
 		if (bearing == 90) bearing = "east";
-		if (bearing == 135) bearing = "south-east";
+		if (bearing == 135) bearing = "southeast";
 		if (bearing == 180) bearing = "south";
-		if (bearing == 225) bearing = "south-west";
+		if (bearing == 225) bearing = "southwest";
 		if (bearing == 270) bearing = "west";
-		if (bearing == 315) bearing = "north-west";
+		if (bearing == 315) bearing = "northwest";
+
+		var model = "<span class='ok'>unknown</span>";
+		console.log(old40, busId, old40[0] == busId);
+		if (old40.includes(busId)) model = "<span class='bad'>D40LF</span>";
+		if (old60.includes(busId)) model = "<span class='bad'>D60LF</span>";
+		if (new40.includes(busId)) model = "<span class='good'>XD40</span>";
+		if (new60.includes(busId)) model = "<span class='good'>XD60</span>";
+
+		if (occupancy <= 20) occupancy = `<span class='good'>${occupancy}%</span>`;
+		else if (occupancy >= 80) occupancy = `<span class='bad'>${occupancy}%</span>`;
+		else occupancy = `<span class='ok'>${occupancy}%</span>`;
 
 		if (busId < 100) {
 			articulated++;
-			addRow(busId, routeId, latitude, longitude, bearing, direction, occupancy, "#articulated_buses_table");
+			addRow(busId, routeId, latitude, longitude, bearing, direction, occupancy, model, "#articulated_buses_table");
 		}
 
 		busDistribution[parseInt(routeId)]++;
-		addRow(busId, routeId, latitude, longitude, bearing, direction, occupancy, "#all_buses_table");
+		addRow(busId, routeId, latitude, longitude, bearing, direction, occupancy, model, "#all_buses_table");
 	}
 
 	for (const route in busDistribution) {
@@ -97,9 +114,9 @@ document.querySelector("textarea").addEventListener("input", (e) => {
 	document.querySelector("div").style = "display: block";
 });
 
-function addRow(busId, routeId, latitude, longitude, bearing, direction, occupancy, table) {
+function addRow(busId, routeId, latitude, longitude, bearing, direction, occupancy, model, table) {
 	const row = document.createElement("tr");
-	row.innerHTML = `<td>${busId}</td><td>${routeId}</td><td><a href="https://www.openstreetmap.org/search?query=${latitude}%20${longitude}" target="_blank">${latitude} ${longitude} <i class="fa-solid fa-arrow-right-long"></i></a></td><td>${bearing}</td><td>${direction}</td><td>${occupancy}%</td>`;
+	row.innerHTML = `<td>${busId}</td><td>${routeId}</td><td><a href="https://www.openstreetmap.org/search?query=${latitude}%20${longitude}" target="_blank">${latitude} ${longitude} <i class="fa-solid fa-arrow-right-long"></i></a></td><td>${bearing}</td><td>${direction}</td><td>${occupancy}</td><td>${model}</td>`;
 	document.querySelector(table).appendChild(row);
 }
 
