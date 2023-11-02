@@ -48,19 +48,18 @@ document.querySelector("textarea").addEventListener("input", (e) => {
 		106: 0,
 	};
 
-	// MODEL ARRAYS
-	let old40 = [];
-	let old60 = [];
-	let new40 = [];
-	let new60 = [];
+	let verticalRoutes = [1, 4, 6, 12, 13, 15, 16, 19, 25, 35, 37, 38, 90, 92, 93, 102, 104, 106];
+	let horizontalRoutes = [2, 3, 5, 7, 9, 17, 20, 24, 27, 28, 30, 31, 33, 36, 91, 94];
+	let loopRoutes = [34];
+	let otherRoutes = [10];
 
 	for (let i = 0; i < totalBuses; i++) {
 		let busId = parseInt(busData.entity[i].id);
-		let routeId = busData.entity[i].vehicle.trip.route_id;
+		let routeId = parseInt(busData.entity[i].vehicle.trip.route_id);
 		let latitude = busData.entity[i].vehicle.position.latitude;
 		let longitude = busData.entity[i].vehicle.position.longitude;
 		let bearing = busData.entity[i].vehicle.position.bearing;
-		let direction = busData.entity[i].vehicle.trip.direction_id; // hard to determine what this actually means
+		let direction = parseInt(busData.entity[i].vehicle.trip.direction_id);
 		let occupancy = parseInt(busData.entity[i].vehicle.occupancy_percentage);
 
 		if (bearing == 0) bearing = "north";
@@ -72,16 +71,28 @@ document.querySelector("textarea").addEventListener("input", (e) => {
 		if (bearing == 270) bearing = "west";
 		if (bearing == 315) bearing = "northwest";
 
-		var model = "<span class='ok'>unknown</span>";
-		console.log(old40, busId, old40[0] == busId);
-		if (old40.includes(busId)) model = "<span class='bad'>D40LF</span>";
-		if (old60.includes(busId)) model = "<span class='bad'>D60LF</span>";
-		if (new40.includes(busId)) model = "<span class='good'>XD40</span>";
-		if (new60.includes(busId)) model = "<span class='good'>XD60</span>";
+		if (direction == 0 && verticalRoutes.includes(routeId)) direction = "SOUTHBOUND";
+		if (direction == 1 && verticalRoutes.includes(routeId)) direction = "NORTHBOUND";
+		if (direction == 0 && horizontalRoutes.includes(routeId)) direction = "WESTBOUND";
+		if (direction == 1 && horizontalRoutes.includes(routeId)) direction = "EASTBOUND";
+		if (direction == 0 && loopRoutes.includes(routeId)) direction = "COUNTERCLOCKWISE";
+		if (direction == 1 && loopRoutes.includes(routeId)) direction = "CLOCKWISE";
+		if (direction == 0 && otherRoutes.includes(routeId)) direction = "WESTERN";
+		if (direction == 1 && otherRoutes.includes(routeId)) direction = "HURON & BARKER";
+		if (routeId < 10) routeId = "0" + routeId;
 
 		if (occupancy <= 20) occupancy = `<span class='good'>${occupancy}%</span>`;
 		else if (occupancy >= 80) occupancy = `<span class='bad'>${occupancy}%</span>`;
 		else occupancy = `<span class='ok'>${occupancy}%</span>`;
+
+		var model = "<span class='ok'>unknown</span>";
+		if (busId >= 21 && busId <= 23) model = "<span class='ok'>D60LF</span>";
+		if (busId >= 24 && busId <= 27) model = "<span class='ok'>D60LFR</span>";
+		if (busId >= 28 && busId <= 36) model = "<span class='good'>XD60</span>";
+		if (busId >= 146 && busId <= 170) model = "<span class='bad'>D40LF</span>";
+		if (busId >= 171 && busId <= 174) model = "<span class='bad'>DE40LF </span>";
+		if (busId >= 175 && busId <= 178) model = "<span class='good'>XDE40</span>";
+		if (busId >= 301 && busId <= 610) model = "<span class='good'>XD40</span>";
 
 		if (busId < 100) {
 			articulated++;
@@ -97,7 +108,8 @@ document.querySelector("textarea").addEventListener("input", (e) => {
 		for (let i = 0; i < busDistribution[route]; i++) busString = busString + "🚌";
 
 		const row = document.createElement("tr");
-		if (route > 100) row.innerHTML = `<td>${route}*</td><td>${busDistribution[route]}</td><td>${busString}</td>`;
+		if (route < 10) row.innerHTML = `<td>0${route}</td><td>${busDistribution[route]}</td><td>${busString}</td>`;
+		else if (route > 100) row.innerHTML = `<td>${route}*</td><td>${busDistribution[route]}</td><td>${busString}</td>`;
 		else row.innerHTML = `<td>${route}</td><td>${busDistribution[route]}</td><td>${busString}</td>`;
 		document.querySelector("#bus_distribution_table").appendChild(row);
 	}
